@@ -1,6 +1,6 @@
 # ☕ Mini Café Dessert API
 
-ระบบ Backend สำหรับ Mini Café Dessert API
+ระบบ Backend สำหรับ Real or Cake API
 
 ## 🔐 Authentication
 

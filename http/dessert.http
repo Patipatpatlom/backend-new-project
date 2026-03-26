@@ -1,0 +1,22 @@
+@BASE_URL = http://localhost:5000
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJCZXN0Iiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc0MzIzOTc2LCJleHAiOjE3NzQ0MTAzNzZ9.3pl2OuE-4sTWZDOy_8H9EzvBNOGiBM7RnmoHM2cuqU8
+### get deserts ใครก็ get ได้
+GET {{BASE_URL}}/dessert
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### post desert
+POST {{BASE_URL}}/dessert
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Cake",
+  "price": 160000,
+  "category": "cake"
+}
+
+### delete deserts
+DELETE  {{BASE_URL}}/dessert/7
+Content-Type: application/json
+Authorization: Bearer {{token}}
