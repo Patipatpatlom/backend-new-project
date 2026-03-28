@@ -1,24 +1,41 @@
 @BASE_URL=http://localhost:5000
 
-### Welcome GET /
-GET {{BASE_URL}}
+#####################################
+### 1. Welcome
+#####################################
+GET {{BASE_URL}}/
 
-###Register
-POST {{BASE_URL}}/register
+#####################################
+### 2. Register
+#####################################
+POST {{BASE_URL}}/auth/register
 Content-Type: application/json
 
 {
-    "email":"GG@hotmail.com",
-    "username":"Gg",
-    "role":"ADMIN",
-    "password":"123456"
+  "email": "GG@hotmail.com",
+  "username": "Gg",
+  "password": "123456"
 }
 
-### Login
-POST {{BASE_URL}}/login
+#####################################
+### 3. Login (IMPORTANT)
+#####################################
+# @name login
+POST {{BASE_URL}}/auth/login
 Content-Type: application/json
 
 {
-    "email":"GG@hotmail.com",
-    "password":"123456"
+  "email": "GG@hotmail.com",
+  "password": "123456"
 }
+
+#####################################
+### 4. Save Token
+#####################################
+@token = {{login.response.body.token}}
+
+#####################################
+### 5. Get Orders (ADMIN ONLY)
+#####################################
+GET {{BASE_URL}}/orders
+Authorization: Bearer {{token}}

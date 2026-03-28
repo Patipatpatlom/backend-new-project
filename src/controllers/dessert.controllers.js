@@ -1,53 +1,69 @@
-import createError from 'http-errors'
-import { addDessert, deleteDessert, findDessert, getDetssert } from '../services/dessert.service.js'
+import {
+  createDessert,
+  deleteDessert,
+  getAllDesserts,
+  getDessertById,
+  updateDessert,
+} from "../services/dessert.service.js";
 
-export async function getDessertsController(req, res, next) {
-    try {
-        const desserts = await getDetssert()
+// ======================= GET ALL =======================
+export const getDessertsController = async (req, res, next) => {
+  try {
+    const data = await getAllDesserts();
 
-        res.status(200).json({ desserts })
+    res.json({
+      message: "Get all desserts success",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
-    } catch (error) {
-        next(error)
-    }
-}
-export async function postDessertsController(req, res, next) {
-    try {
-        const { role } = req.user
-        if (role !== "ADMIN") {
-            throw createError(403, "Forbidden: Admin only")
-        }
-        const { name, price, category } = req.body
-        const newDessert = await addDessert(name, price, category)
-        res.status(201).json({
-            message: "Dessert created",
-            dessert: {
-                id: newDessert.id,
-                name: newDessert.name,
-                price: newDessert.price,
-                category: newDessert.category
-            }
-        })
+// ======================= GET BY ID =======================
+export const getDessertController = async (req, res, next) => {
+  try {
+    const { id } = req.params;
 
-    } catch (error) {
-        next(error)
-    }
-}
-export async function deleteDesertsController(req, res, next) {
-    try {
-        const { role } = req.user
-        if (role !== "ADMIN") {
-            throw createError(403, "Forbidden: Admin only")
-        }
-        const id = Number(req.params.id)
-        const dessert = await findDessert(id)
-        if (!dessert) {
-            throw createError(404, "Dessert not found")
-        }
-        await deleteDessert(id)
-        res.status(200).json({ message: "Dessert deleted" })
-    } catch (error) {
-        next(error)
-    }
+    const data = await getDessertById(Number(id));
 
-}
+    res.json({
+      message: "Get dessert success",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ======================= CREATE =======================
+export const createDessertController = async (req, res, next) => {
+  try {
+    const { name, price, image } = req.body;
+
+    const data = await createDessert(name, price, image);
+
+    res.status(201).json({
+      message: "Create dessert success",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ======================= DELETE =======================
+export const deleteDessertController = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const data = await deleteDessert(Number(id));
+
+    res.json({
+      message: "Delete dessert success",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

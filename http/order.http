@@ -1,0 +1,30 @@
+@BASE_URL=http://localhost:5000
+
+### TEST ORDER
+POST {{BASE_URL}}/orders
+Content-Type: application/json
+
+{
+  "user_id": 1
+}
+
+
+### CREATE ORDER
+POST {{BASE_URL}}/orders
+Content-Type: application/json
+
+{
+  "user_id": 1,
+  "items": [
+    {
+      "dessert_id": 1,
+      "quantity": 2,
+      "price": 120
+    },
+    {
+      "dessert_id": 2,
+      "quantity": 1,
+      "price": 150
+    }
+  ]
+}

@@ -6,11 +6,11 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 enum Role {
@@ -26,6 +26,8 @@ model User {
   role     Role   @default(USER)
 
   reviews Review[]
+  orders  Order[]
+  cart    Cart? // 🔥 ต้องมี
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -39,8 +41,10 @@ model Cake {
 
   reviews Review[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  orderItems OrderItem[]
+  cartItems  CartItem[]
 }
 
 model Review {
@@ -58,4 +62,71 @@ model Review {
   updatedAt DateTime @updatedAt
 
   @@unique([userId, cakeId])
+}
+
+model Order {
+  id         Int     @id @default(autoincrement())
+  userId     Int
+  totalPrice Int
+  status     String  @default("PENDING")
+  address    String?
+
+  user    User        @relation(fields: [userId], references: [id])
+  items   OrderItem[]
+  payment Payment?
+
+  createdAt DateTime @default(now())
+}
+
+model OrderItem {
+  id       Int   @id @default(autoincrement())
+  orderId  Int
+  cakeId   Int
+  quantity Int
+  price    Float
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  cake  Cake  @relation(fields: [cakeId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Cart {
+  id     Int @id @default(autoincrement())
+  userId Int @unique
+
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items CartItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CartItem {
+  id Int @id @default(autoincrement())
+
+  cartId   Int
+  cakeId   Int
+  quantity Int @default(1)
+
+  cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cake Cake @relation(fields: [cakeId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([cartId, cakeId])
+}
+
+model Payment {
+  id Int @id @default(autoincrement())
+
+  orderId Int    @unique
+  method  String
+  status  String @default("PENDING")
+
+  providerRef String?
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  createdAt DateTime @default(now())
 }

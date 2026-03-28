@@ -1,4 +1,4 @@
-import { prisma } from "../config/prismaClient.js";
+import db from "../config/db.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import createError from "http-errors";
@@ -7,32 +7,33 @@ import createError from "http-errors";
 
 // 🔍 หา user ด้วย email
 export const findUserByEmail = async (email) => {
-  return await prisma.user.findFirst({
+  return await db.user.findFirst({
     where: { email },
   });
 };
 
 // 🔍 หา user ด้วย id
 export const findUserById = async (id) => {
-  return await prisma.user.findFirst({
+  return await db.user.findFirst({
     where: { id },
   });
 };
 
 // ✅ CREATE USER
-export const createUser = async (username, email, password) => {
-  return await prisma.user.create({
+export const createUser = async (username, email, password, role = "USER") => {
+  return await db.user.create({
     data: {
       username,
       email,
       password,
+      role,
     },
   });
 };
 
-// ✏️ EDIT USER (🔥 แก้ bug ของคุณ)
+// ✏️ EDIT USER
 export const editUser = async (email, username, password) => {
-  return await prisma.user.update({
+  return await db.user.update({
     where: { email },
     data: {
       username,

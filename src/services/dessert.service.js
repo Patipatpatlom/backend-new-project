@@ -1,40 +1,45 @@
-import { prisma } from "../config/prismaClient.js";
+import db from "../config/db.js";
 
+// ======================= SERVICE =======================
 
-export const getDetssert = async () => {
-  const desert = await prisma.dessert.findMany({
-    select: {
-      id: true,
-      name: true,
-      price: true,
-      category: true,
-    },
-  });
-  return desert;
+// 🔍 GET ALL DESSERTS
+export const getAllDesserts = async () => {
+  return await db.dessert.findMany();
 };
 
-export const addDessert = async (name, price, category) => {
-  const desert = await prisma.dessert.create({
+// 🔍 GET DESSERT BY ID
+export const getDessertById = async (id) => {
+  return await db.dessert.findUnique({
+    where: { id },
+  });
+};
+
+// ➕ CREATE DESSERT
+export const createDessert = async (name, price, image) => {
+  return await db.dessert.create({
     data: {
       name,
       price,
-      category,
+      image,
     },
   });
-  return desert;
 };
 
-export const findDessert = async (id) => {
-  const desert = await prisma.dessert.findFirst({
-    where: {
-      id: id,
+// ✏️ UPDATE DESSERT
+export const updateDessert = async (id, name, price, image) => {
+  return await db.dessert.update({
+    where: { id },
+    data: {
+      name,
+      price,
+      image,
     },
   });
-  return desert;
 };
 
+// ❌ DELETE DESSERT
 export const deleteDessert = async (id) => {
-  await prisma.dessert.delete({
-    where: { id: id },
+  return await db.dessert.delete({
+    where: { id },
   });
 };

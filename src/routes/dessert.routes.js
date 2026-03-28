@@ -1,11 +1,24 @@
+import {
+  createDessertController,
+  deleteDessertController,
+  getDessertsController,
+  getDessertController,
+} from "../controllers/dessert.controllers.js";
+
 import express from "express";
-import authCheck from "../middleware/authen.middleware.js";
-import { postDessertsController, deleteDesertsController, getDessertsController } from "../controllers/dessert.controllers.js"
 
-const dessertRouter = express.Router();
+const router = express.Router();
 
-dessertRouter.get("/", authCheck, getDessertsController);
-dessertRouter.post("/", authCheck, postDessertsController);
-dessertRouter.delete("/:id", authCheck, deleteDesertsController);
+// GET all desserts
+router.get("/", getDessertsController);
 
-export default dessertRouter;
+// GET one dessert
+router.get("/:id", getDessertController);
+
+// POST create dessert
+router.post("/", createDessertController);
+
+// DELETE dessert
+router.delete("/:id", deleteDessertController);
+
+export default router;

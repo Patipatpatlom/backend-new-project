@@ -1,0 +1,35 @@
+import createError from "http-errors";
+import jwt from "jsonwebtoken";
+import { findUserById } from "../services/auth.service.js";
+
+async function authCheck(req, res, next) {
+  try {
+    const authorization = req.headers.authorization;
+
+    if (!authorization) {
+      return next(createError(401, "Unauthorized"));
+    }
+
+    const token = authorization.split(" ")[1];
+
+    const payload = jwt.verify(token, process.env.JWT_SECRET, {
+      algorithms: ["HS256"],
+    });
+
+    const user = await findUserById(payload.id);
+
+    if (!user) {
+      return next(createError(401, "Unauthorized"));
+    }
+
+    // 🔥 DEBUG สำคัญมาก
+    console.log("USER FROM DB:", user);
+
+    req.user = user;
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+
+export default authCheck;
