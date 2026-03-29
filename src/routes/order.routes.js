@@ -1,16 +1,21 @@
 import express from "express";
 import {
+  createOrder,
   getAllOrders,
+  getMyOrders,
   updateOrderStatus,
 } from "../controllers/order.controller.js";
+
 import { protect } from "../middleware/protect.js";
 
 const router = express.Router();
 
-// 📦 admin ดู orders
-router.get("/", protect, getAllOrders);
+// 👤 USER
+router.post("/", protect, createOrder);
+router.get("/me", protect, getMyOrders);
 
-// 🔄 admin update status
-router.patch("/:orderId", protect, updateOrderStatus);
+// 🔥 ADMIN
+router.get("/", protect, getAllOrders);
+router.patch("/:orderId/status", protect, updateOrderStatus);
 
 export default router;

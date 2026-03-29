@@ -1,32 +1,130 @@
 import prisma from "../prisma/client.js";
 
-// 📦 GET ALL ORDERS (DEBUG VERSION)
-export const getAllOrders = async (req, res) => {
+console.log("PRISMA KEYS:", Object.keys(prisma));
+
+/* =========================
+   📦 CREATE ORDER
+========================= */
+export const createOrder = async (req, res) => {
   try {
-    // 🔒 admin only
-    if (!req.user || req.user.role !== "ADMIN") {
-      return res.status(403).json({
-        message: "Admin only 💀",
+    const userId = req.user.id;
+    const { items, address } = req.body;
+
+    if (!items || items.length === 0) {
+      return res.status(400).json({ message: "No items 💀" });
+    }
+
+    let totalPrice = 0;
+    const orderItemsData = [];
+
+    for (const item of items) {
+      if (!item.cakeId || item.quantity <= 0) {
+        return res.status(400).json({ message: "Invalid item 💀" });
+      }
+
+      const cake = await prisma.cake.findUnique({
+        where: { id: item.cakeId },
+      });
+
+      if (!cake) {
+        return res.status(404).json({ message: "Cake not found 💀" });
+      }
+
+      totalPrice += cake.price * item.quantity;
+
+      orderItemsData.push({
+        cakeId: item.cakeId,
+        quantity: item.quantity,
+        price: cake.price,
       });
     }
 
-    // 🔥 STEP 1: เช็ค DB ล้วน ๆ ก่อน
-    const orders = await prisma.order.findMany();
+    const order = await prisma.order.create({
+      data: {
+        userId,
+        address: address || null,
+        totalPrice,
+        items: {
+          create: orderItemsData,
+        },
+      },
+      include: {
+        items: true,
+      },
+    });
 
-    res.json(orders);
-  } catch (err) {
-    console.log("🔥 REAL ERROR:", err); // 👈 ดูใน terminal
+    res.status(201).json(order);
+  } catch (error) {
     res.status(500).json({
-      message: "Get orders error 💀",
-      error: err.message,
+      message: "Create order failed 💀",
+      error: error.message,
     });
   }
 };
 
+/* =========================
+   📦 GET ALL ORDERS (ADMIN)
+========================= */
+export const getAllOrders = async (req, res) => {
+  try {
+    const orders = await prisma.order.findMany({
+      include: {
+        items: true,
+        user: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: "Get orders failed 💀" });
+  }
+};
+
+/* =========================
+   👤 GET MY ORDERS
+========================= */
+export const getMyOrders = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const orders = await prisma.order.findMany({
+      where: { userId },
+      include: {
+        items: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: "Get my orders failed 💀" });
+  }
+};
+
+/* =========================
+   🔥 UPDATE ORDER STATUS (ADMIN)
+========================= */
 export const updateOrderStatus = async (req, res) => {
   try {
     const { orderId } = req.params;
     const { status } = req.body;
+
+    const allowed = [
+      "PENDING",
+      "PAID",
+      "SHIPPED",
+      "COMPLETED",
+      "CANCELLED",
+    ];
+
+    if (!allowed.includes(status)) {
+      return res.status(400).json({ message: "Invalid status 💀" });
+    }
 
     const order = await prisma.order.findUnique({
       where: { id: Number(orderId) },
@@ -41,12 +139,11 @@ export const updateOrderStatus = async (req, res) => {
       data: { status },
     });
 
-    res.json({
-      message: "Updated 💀🔥",
-      order: updated,
+    res.json(updated);
+  } catch (error) {
+    res.status(500).json({
+      message: "Update status failed 💀",
+      error: error.message,
     });
-  } catch (err) {
-    console.log("🔥 UPDATE ERROR:", err);
-    res.status(500).json({ message: "Update error 💀" });
   }
 };

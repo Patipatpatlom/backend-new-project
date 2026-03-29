@@ -4,42 +4,44 @@ import db from "../config/db.js";
 
 // 🔍 GET ALL DESSERTS
 export const getAllDesserts = async () => {
-  return await db.dessert.findMany();
+  return await db.cake.findMany();
 };
 
 // 🔍 GET DESSERT BY ID
 export const getDessertById = async (id) => {
-  return await db.dessert.findUnique({
+  return await db.cake.findUnique({
     where: { id },
   });
 };
 
 // ➕ CREATE DESSERT
-export const createDessert = async (name, price, image) => {
-  return await db.dessert.create({
+export const createDessert = async (name, price, image, category) => {
+  return await db.cake.create({
     data: {
       name,
       price,
       image,
+      category,
     },
   });
 };
 
 // ✏️ UPDATE DESSERT
-export const updateDessert = async (id, name, price, image) => {
-  return await db.dessert.update({
+export const updateDessert = async (id, name, price, image, category) => {
+  return await db.cake.update({
     where: { id },
     data: {
       name,
       price,
       image,
+      category,
     },
   });
 };
 
 // ❌ DELETE DESSERT
 export const deleteDessert = async (id) => {
-  return await db.dessert.delete({
+  return await db.cake.delete({
     where: { id },
   });
 };

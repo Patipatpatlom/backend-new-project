@@ -14,7 +14,7 @@ export const registerController = async (req, res, next) => {
       throw createError(400, "Please fill all fields");
     }
 
-    const normalizedEmail = email.toLowerCase();
+    const normalizedEmail = email.toLowerCase().trim();
 
     // check existing user
     const existingUser = await prisma.user.findUnique({
@@ -32,10 +32,10 @@ export const registerController = async (req, res, next) => {
     // hash password
     const hashPassword = await bcrypt.hash(password, 10);
 
-    // create user (FIXED ROLE = USER)
+    // create user
     const newUser = await prisma.user.create({
       data: {
-        username,
+        username: username.trim(),
         email: normalizedEmail,
         password: hashPassword,
         role: "USER",
@@ -51,12 +51,13 @@ export const registerController = async (req, res, next) => {
         role: newUser.role,
       },
     });
+
   } catch (error) {
     console.log("REGISTER ERROR:", error);
     next(error);
   }
 };
-;
+
 // ======================= LOGIN =======================
 
 export const loginController = async (req, res, next) => {
@@ -67,7 +68,7 @@ export const loginController = async (req, res, next) => {
       return next(createError(400, "Please fill all fields"));
     }
 
-    const normalizedEmail = email.toLowerCase();
+    const normalizedEmail = email.toLowerCase().trim();
 
     const user = await prisma.user.findUnique({
       where: { email: normalizedEmail },
@@ -83,7 +84,7 @@ export const loginController = async (req, res, next) => {
       return next(createError(401, "Invalid credentials"));
     }
 
-    // ✅ create token (ต้องอยู่ใน function)
+    // 🔐 JWT TOKEN
     const token = jwt.sign(
       {
         id: user.id,

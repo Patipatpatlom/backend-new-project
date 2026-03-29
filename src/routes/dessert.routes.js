@@ -1,24 +1,32 @@
+import express from "express";
 import {
-  createDessertController,
-  deleteDessertController,
   getDessertsController,
   getDessertController,
-} from "../controllers/dessert.controllers.js";
+  createDessertController,
+  deleteDessertController,
+  updateDessertController,
+} from "../controllers/dessert.controller.js";
+import { upload } from "../utils/upload.js";
 
-import express from "express";
 
 const router = express.Router();
 
-// GET all desserts
+router.post("/upload", upload.single("image"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({
+      message: "No file uploaded 💀",
+    });
+  }
+
+  res.json({
+    image: `http://localhost:5000/uploads/${req.file.filename}`,
+  });
+});
+
 router.get("/", getDessertsController);
-
-// GET one dessert
 router.get("/:id", getDessertController);
-
-// POST create dessert
 router.post("/", createDessertController);
-
-// DELETE dessert
+router.put("/:id", updateDessertController); 
 router.delete("/:id", deleteDessertController);
 
 export default router;

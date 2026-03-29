@@ -3,14 +3,15 @@ import {
   getAllOrders,
   updateOrderStatus,
 } from "../controllers/order.controller.js";
+
 import { protect } from "../middleware/protect.js";
 
 const router = express.Router();
 
-// admin ดู order
+// 👑 ADMIN ONLY - GET ALL ORDERS
 router.get("/orders", protect, getAllOrders);
 
-// admin update status
+// 👑 ADMIN ONLY - UPDATE ORDER STATUS
 router.patch("/orders/:orderId", protect, updateOrderStatus);
 
 export default router;

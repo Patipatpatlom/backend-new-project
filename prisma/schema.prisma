@@ -38,6 +38,7 @@ model Cake {
   name     String
   price    Float
   category String
+  image    String
 
   reviews Review[]
 
