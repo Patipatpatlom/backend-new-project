@@ -18,4 +18,6 @@ router.get("/me", protect, getMyOrders);
 router.get("/", protect, getAllOrders);
 router.patch("/:orderId/status", protect, updateOrderStatus);
 
+router.get("/my", protect, getMyOrders);
+
 export default router;

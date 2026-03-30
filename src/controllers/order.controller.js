@@ -100,9 +100,9 @@ export const getMyOrders = async (req, res) => {
       },
     });
 
-    res.json(orders);
-  } catch (error) {
-    res.status(500).json({ message: "Get my orders failed 💀" });
+    res.json({ orders });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
   }
 };
 
