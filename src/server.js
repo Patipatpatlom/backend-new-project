@@ -25,7 +25,7 @@ const server = http.createServer(app);
 // 🔴 SOCKET.IO SETUP
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: "http://localhost:5174",
     methods: ["GET", "POST", "PATCH", "DELETE"],
   },
 });

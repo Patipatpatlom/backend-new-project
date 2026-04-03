@@ -18,6 +18,12 @@ enum Role {
   ADMIN
 }
 
+enum Status {
+  PENDING
+  WAITING
+  SUCCESS
+}
+
 model User {
   id       Int    @id @default(autoincrement())
   username String
@@ -69,7 +75,7 @@ model Order {
   id         Int     @id @default(autoincrement())
   userId     Int
   totalPrice Int
-  status     String  @default("PENDING")
+  status     Status  @default(PENDING)
   address    String?
 
   user    User        @relation(fields: [userId], references: [id])

@@ -8,12 +8,12 @@ GET {{BASE_URL}}/
 #####################################
 ### 2. Register
 #####################################
-POST {{BASE_URL}}/auth/register
+POST {{BASE_URL}}/api/auth/register
 Content-Type: application/json
 
 {
-  "email": "GG@hotmail.com",
-  "username": "Gg",
+  "email": "oo@hotmail.com",
+  "username": "oo",
   "password": "123456"
 }
 
@@ -21,7 +21,7 @@ Content-Type: application/json
 ### 3. Login (IMPORTANT)
 #####################################
 # @name login
-POST {{BASE_URL}}/auth/login
+POST {{BASE_URL}}/api/auth/login
 Content-Type: application/json
 
 {

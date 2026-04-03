@@ -9,7 +9,7 @@ export const createOrder = async (req, res) => {
   try {
     const userId = req.user.id;
     const { items, address } = req.body;
-
+    console.log(req.body)
     if (!items || items.length === 0) {
       return res.status(400).json({ message: "No items 💀" });
     }

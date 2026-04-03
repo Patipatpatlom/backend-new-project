@@ -7,13 +7,13 @@ import createError from "http-errors";
 
 export const registerController = async (req, res, next) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password } = req.body; //ดึงค่าที่ user กรอกมา 
 
-    // validate
+    // validate ตรวจสอบว่ากรอกครบไหม
     if (!username || !email || !password) {
       throw createError(400, "Please fill all fields");
     }
-
+      // ทำให้ email สะอาด
     const normalizedEmail = email.toLowerCase().trim();
 
     // check existing user
@@ -63,6 +63,9 @@ export const registerController = async (req, res, next) => {
 export const loginController = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    
+        // console.log(req.body.email)
+        // console.log(req.body.password) 
 
     if (!email || !password) {
       return next(createError(400, "Please fill all fields"));

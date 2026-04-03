@@ -10,21 +10,17 @@ Content-Type: application/json
 
 
 ### CREATE ORDER
-POST {{BASE_URL}}/orders
+POST {{BASE_URL}}/api/orders
 Content-Type: application/json
+Authorization: Baerer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJHZyIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzc0OTQ4Njk2LCJleHAiOjE3NzUwMzUwOTZ9.iLfZfAJQT5B88USUD5XGm53PgKSH77gRxLd17vwl8BQ
 
 {
   "user_id": 1,
+  "totalPrice": 240,
   "items": [
     {
-      "dessert_id": 1,
-      "quantity": 2,
-      "price": 120
-    },
-    {
-      "dessert_id": 2,
-      "quantity": 1,
-      "price": 150
+      "cakeId": 8,
+      "quantity": 2
     }
   ]
 }
